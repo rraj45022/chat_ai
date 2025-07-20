@@ -1,0 +1,59 @@
+.authForm {
+  max-width: 350px;
+  margin: 50px auto;
+  background: #fff;
+  padding: 32px 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(25,60,60,0.09);
+  display: flex;
+  flex-direction: column;
+}
+.heading {
+  margin-bottom: 22px;
+  text-align: center;
+}
+.input {
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  border: 1px solid #bcd5e1;
+  border-radius: 6px;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.2s;
+}
+.input:focus {
+  border: 1.5px solid #0c79e2;
+}
+.button {
+  background: #0c79e2;
+  color: #fff;
+  border: none;
+  padding: 10px 0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+.button:hover {
+  background: #14589c;
+}
+.error {
+  color: #f22727;
+  margin-top: 6px;
+  text-align: center;
+}
+.info {
+  color: #28a745;
+  margin-top: 6px;
+  text-align: center;
+}
+.toggleText {
+  margin-top: 20px;
+  font-size: 0.96rem;
+  text-align: center;
+}
+.toggleLink {
+  color: #0c79e2;
+  cursor: pointer;
+  font-weight: 600;
+}
