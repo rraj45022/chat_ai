@@ -34,7 +34,6 @@ function App() {
     try {
       const res = await fetch("http://localhost:8000/create_session", {
         method: "POST",
-        credentials: "include",
         headers: { 
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}` 
