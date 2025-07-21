@@ -1,5 +1,6 @@
 import os
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status,  File, UploadFile
+import whisper
 from pydantic import BaseModel
 from typing import List, Dict
 from openai import OpenAI  # OpenAI-compatible client
@@ -63,6 +64,23 @@ def save_message(db: Session, session_id: str, user_id: int, role: str, content:
     msg = ChatMessage(session_id=session_id, role=role, content=content)
     db.add(msg)
     db.commit()
+
+
+
+
+
+model = whisper.load_model("base")
+
+@router.post("/transcribe/")
+async def transcribe_audio(file: UploadFile = File(...)):
+    audio_bytes = await file.read()
+    with open("temp.wav", "wb") as f:
+        f.write(audio_bytes)
+    # Transcribe audio file
+    result = model.transcribe("temp.wav")
+    #call /chat endpoint with the result input
+    
+    return {"transcript": result["text"]}
 
 
 # Use environment variable for safety: export XAI_API_KEY=your-grok-key

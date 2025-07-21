@@ -34,8 +34,12 @@ function App() {
     try {
       const res = await fetch("http://localhost:8000/create_session", {
         method: "POST",
-        headers: { Authorization: `Bearer ${token}` }
-      });
+        credentials: "include",
+        headers: { 
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}` 
+        },
+    });
       const data = await res.json();
       if (res.ok && data.session_id) {
         setActiveSessionId(data.session_id);

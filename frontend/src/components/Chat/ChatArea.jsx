@@ -65,7 +65,13 @@ const ChatArea = ({ sessionId, token }) => {
         ))}
         <div ref={chatEndRef} />
       </div>
-      <MessageInput onSend={handleSend} disabled={loading} />
+      {/* <MessageInput onSend={handleSend} disabled={loading} /> */}
+      <MessageInput
+        onSend={handleSend}
+        disabled={loading}
+        token={token}
+        sessionId={sessionId}
+/>
     </div>
   );
 };
