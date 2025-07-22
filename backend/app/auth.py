@@ -48,13 +48,38 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     db.refresh(new_user)
     return UserRead.model_validate(new_user)
 
+from fastapi import Response
+
+from fastapi import Response
+
 @router.post("/login")
-def login(form: UserLogin, db: Session = Depends(get_db)):
+def login(form: UserLogin, response: Response, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.username == form.username).first()
     if not user or not verify_password(form.password, user.hashed_password):
         raise HTTPException(status_code=401, detail="Incorrect username or password")
     access_token = create_access_token(data={"sub": user.username})
-    return {"access_token": access_token, "token_type": "bearer"}
+    # Set token as HTTP-only cookie
+    response.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=True,
+        max_age=3600,  # 1 hour
+        expires=3600,
+        samesite="lax",
+        secure=False  # Set True if using HTTPS
+    )
+    return {"message": "Login successful"}
+
+@router.post("/logout")
+def logout(response: Response):
+    response.delete_cookie(key="access_token")
+    return {"message": "Logout successful"}
+
+@router.get("/user/me", response_model=UserRead)
+def read_current_user(current_user: User = Depends(get_current_user)):
+    if not current_user:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    return current_user
 
 import uuid
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -73,3 +98,12 @@ async def create_chat_session(
     db.commit()
     db.refresh(new_session)
     return {"session_id": session_id}
+
+@router.delete("/delete_session/{session_id}")
+def delete_chat_session(session_id: str, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    session = db.query(ChatSession).filter(ChatSession.session_id == session_id, ChatSession.user_id == current_user.id).first()
+    if not session:
+        raise HTTPException(status_code=404, detail="Chat session not found")
+    db.delete(session)
+    db.commit()
+    return {"message": "Chat session deleted successfully"}

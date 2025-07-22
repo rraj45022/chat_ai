@@ -4,10 +4,12 @@
   background: #f9fbfd;
   border-right: 2px solid #e0e0e0;
   padding: 0 0 18px 0;
-  height: 100vh;
+  height: calc(100vh - 70px);
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.05);
+  border-radius: 8px 0 0 8px;
 }
 .sidebar-header {
   display: flex;

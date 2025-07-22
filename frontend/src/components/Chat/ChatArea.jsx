@@ -22,9 +22,10 @@ const ChatArea = ({ sessionId, token }) => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
+            // Authorization: `Bearer ${token}`
           },
-          body: JSON.stringify({ session_id: sessionId })
+          body: JSON.stringify({ session_id: sessionId }),
+          credentials: "include",
         });
         const data = await res.json();
         setMessages(data.conversation || []);
@@ -34,7 +35,7 @@ const ChatArea = ({ sessionId, token }) => {
       setLoading(false);
     };
     if (sessionId) fetchHistory();
-  }, [sessionId, token]);
+  }, [sessionId]);
 
   // Send new message to backend and update UI
   const handleSend = async (text) => {
@@ -44,9 +45,10 @@ const ChatArea = ({ sessionId, token }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
+          // Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify({ session_id: sessionId, message: text })
+        body: JSON.stringify({ session_id: sessionId, message: text }),
+        credentials: "include",
       });
       const data = await res.json();
       setMessages(data.conversation || []);

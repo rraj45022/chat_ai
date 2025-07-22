@@ -18,19 +18,22 @@ router = APIRouter()
 load_dotenv(dotenv_path=Path(__file__).resolve().parent / ".env")
 bearer_scheme = HTTPBearer()
 
+from fastapi import Cookie
+
 def get_current_user(
-    creds: HTTPAuthorizationCredentials = Depends(bearer_scheme), 
+    access_token: str = Cookie(None),
     db: Session = Depends(get_db)
 ):
-    token = creds.credentials
     SECRET_KEY = os.getenv("SECRET_KEY")
     ALGORITHM = os.getenv("ALGORITHM") or "HS256"
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials"
     )
+    if access_token is None:
+        raise credentials_exception
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(access_token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
         if username is None:
             raise credentials_exception

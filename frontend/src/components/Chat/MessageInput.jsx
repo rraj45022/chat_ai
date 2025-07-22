@@ -30,8 +30,9 @@ const MessageInput = ({ onSend, disabled, token }) => {
       const res = await fetch("http://localhost:8000/transcribe/", {
         method: "POST",
         body: formData,
+        credentials: "include",
         headers: {
-          Authorization: `Bearer ${token}`,
+          // Authorization: `Bearer ${token}`,
         }
       });
       const data = await res.json();

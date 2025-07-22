@@ -22,6 +22,7 @@ function AudioRecorder({ onTranscription }) {
       const res = await fetch("http://localhost:8000/transcribe/", {
         method: "POST",
         body: formData,
+        credentials: "include",
       });
       const data = await res.json();
       onTranscription(data.transcript);

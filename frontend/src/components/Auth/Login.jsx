@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./Login.css";
 
-const Login = ({ setToken, onToggle }) => {
+const Login = ({ onLoginSuccess, onToggle }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -16,14 +16,16 @@ const Login = ({ setToken, onToggle }) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
+        credentials: "include",
         });
 
       const data = await response.json();
       console.log(data);
       
-      if (response.ok && data.access_token) {
-        setToken(data.access_token);
-        localStorage.setItem("token", data.access_token);
+      if (response.ok) {
+        // Instead of setting token in state or localStorage,
+        // just notify parent that login succeeded
+        onLoginSuccess();
       } else {
         setError(data.message || "Invalid credentials.");
       }

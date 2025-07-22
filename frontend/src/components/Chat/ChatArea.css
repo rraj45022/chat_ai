@@ -1,7 +1,11 @@
 .chatArea {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: calc(100vh - 70px);
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  border-radius: 0 8px 8px 0;
+  background: #fff;
+  margin: 8px;
 }
 
 .chatMessages {
