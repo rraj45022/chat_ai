@@ -67,6 +67,11 @@ function App() {
 
   // Handler for creating a new chat session
   const handleNewSession = async () => {
+    const title = window.prompt("Enter a title for the new chat session:");
+    if (title === null) {
+      // User cancelled the prompt
+      return;
+    }
     try {
       const res = await fetch("http://localhost:8000/create_session", {
         method: "POST",
@@ -74,6 +79,7 @@ function App() {
           "Content-Type": "application/json",
         },
         credentials: "include",
+        body: JSON.stringify({ title }),
       });
       const data = await res.json();
       if (res.ok && data.session_id) {

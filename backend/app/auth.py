@@ -85,15 +85,21 @@ import uuid
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
+from pydantic import BaseModel
+
+class CreateSessionRequest(BaseModel):
+    title: str = None
+
 @router.post("/create_session")
 async def create_chat_session(
+    req: CreateSessionRequest,
     db: Session = Depends(get_db), 
     current_user: User = Depends(get_current_user)
 ):
     # Generate a new unique session ID
     session_id = str(uuid.uuid4())
     # Create new ChatSession row for this user
-    new_session = ChatSession(session_id=session_id, user_id=current_user.id)
+    new_session = ChatSession(session_id=session_id, user_id=current_user.id, title=req.title)
     db.add(new_session)
     db.commit()
     db.refresh(new_session)

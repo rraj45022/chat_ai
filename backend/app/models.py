@@ -21,6 +21,7 @@ class ChatSession(Base):
     id = Column(Integer, primary_key=True, index=True)
     session_id = Column(String, unique=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    title = Column(String, nullable=True)  # New nullable title column for chat summary
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
     conversation = relationship("ChatMessage", back_populates="chat_session")
