@@ -1,7 +1,7 @@
 .sidebar {
   min-width: 260px;
   max-width: 300px;
-  background: #f9fbfd;
+  background: #12111152;
   border-right: 2px solid #e0e0e0;
   padding: 0 0 18px 0;
   height: calc(100vh - 70px);
@@ -24,7 +24,7 @@
   letter-spacing: 0.5px;
 }
 .new-session-btn {
-  background: #0c79e2;
+  background: #616e41;
   color: #fff;
   font-weight: 600;
   border: none;
@@ -33,13 +33,14 @@
   cursor: pointer;
 }
 .new-session-btn:hover {
-  background: #14589c;
+  background: #0f2030;
 }
 .sidebar-loading,
 .sidebar-none {
   padding: 20px;
   text-align: center;
-  color: #98a2b3;
+  color: #000103;
+  font-size: larger;
 }
 .sidebar-list {
   list-style: none;

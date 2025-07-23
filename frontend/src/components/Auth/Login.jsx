@@ -17,11 +17,11 @@ const Login = ({ onLoginSuccess, onToggle }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
         credentials: "include",
-        });
+      });
 
       const data = await response.json();
       console.log(data);
-      
+
       if (response.ok) {
         // Instead of setting token in state or localStorage,
         // just notify parent that login succeeded
@@ -35,34 +35,36 @@ const Login = ({ onLoginSuccess, onToggle }) => {
   };
 
   return (
-    <form className="authForm" onSubmit={handleLogin}>
-      <h2 className="heading">Login</h2>
-      <input
-        className="input"
-        placeholder="Username"
-        value={username}
-        onChange={e => setUsername(e.target.value)}
-        required
-      />
-      <input
-        className="input"
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-        required
-      />
-      <button className="button" type="submit">
-        Log In
-      </button>
-      {error && <div className="error">{error}</div>}
-      <div className="toggleText">
-        Don't have an account?
-        <span className="toggleLink" onClick={onToggle}>
-          {" "}Register
-        </span>
-      </div>
-    </form>
+    <div className="loginPage">
+      <form className="authForm" onSubmit={handleLogin}>
+        <h2 className="heading">Code_AI_ Login</h2>
+        <input
+          className="input"
+          placeholder="Username"
+          value={username}
+          onChange={e => setUsername(e.target.value)}
+          required
+        />
+        <input
+          className="input"
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          required
+        />
+        <button className="button" type="submit">
+          Log In
+        </button>
+        {error && <div className="error">{error}</div>}
+        <div className="toggleText">
+          Don't have an account?
+          <span className="toggleLink" onClick={onToggle}>
+            {" "}Register
+          </span>
+        </div>
+      </form>
+    </div>
   );
 };
 

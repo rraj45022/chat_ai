@@ -1,54 +1,107 @@
-.authForm {
-  max-width: 350px;
-  margin: 50px auto;
-  background: #fff;
-  padding: 32px 24px;
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(25,60,60,0.09);
+.loginPage {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0a1a2a, #1a2a4a);
+  background-image: url('./background.png'); /* Corrected relative path */
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  padding: 20px;
 }
+
+.logoContainer {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.logo {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
+}
+
+.authForm {
+  max-width: 350px;
+  width: 100%;
+  background: rgba(20, 30, 50, 0.85);
+  padding: 32px 24px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(10, 20, 40, 0.7);
+  display: flex;
+  flex-direction: column;
+  color: #e0e6f1;
+}
+
 .heading {
   margin-bottom: 22px;
   text-align: center;
+  color: #f0f4ff;
+  font-weight: 700;
+  font-size: 1.8rem;
 }
+
 .input {
   margin-bottom: 14px;
-  padding: 10px 12px;
-  border: 1px solid #bcd5e1;
-  border-radius: 6px;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 10px;
   font-size: 1rem;
   outline: none;
-  transition: border 0.2s;
+  background: #1a2a4a;
+  color: #cbd6f0;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.7);
+  transition: background 0.3s, box-shadow 0.3s;
 }
+
+.input::placeholder {
+  color: #7a8dbd;
+}
+
 .input:focus {
-  border: 1.5px solid #0c79e2;
+  background: #2a3a6a;
+  box-shadow: 0 0 8px #0c79e2;
 }
+
 .button {
-  background: #0c79e2;
+  background: linear-gradient(135deg, #0c79e2, #14589c);
   color: #fff;
   border: none;
-  padding: 10px 0;
-  border-radius: 6px;
+  padding: 12px 0;
+  border-radius: 10px;
   cursor: pointer;
-  font-weight: 600;
-  transition: background 0.2s;
+  font-weight: 700;
+  font-size: 1.1rem;
+  transition: background 0.3s, box-shadow 0.3s;
+  box-shadow: 0 4px 10px rgba(12, 121, 226, 0.6);
 }
+
 .button:hover {
-  background: #14589c;
+  background: linear-gradient(135deg, #14589c, #0c79e2);
+  box-shadow: 0 6px 14px rgba(12, 121, 226, 0.8);
 }
+
 .error {
-  color: #f22727;
+  color: #ff6b6b;
   margin-top: 6px;
   text-align: center;
+  font-weight: 600;
 }
+
 .toggleText {
   margin-top: 20px;
-  font-size: 0.96rem;
+  font-size: 1rem;
   text-align: center;
+  color: #a0b0d0;
 }
+
 .toggleLink {
   color: #0c79e2;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 700;
+  margin-left: 6px;
+  text-decoration: underline;
 }

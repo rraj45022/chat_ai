@@ -125,7 +125,7 @@ function App() {
   return (
     <div className="app-container">
       <header className="header" style={{height: "70px"}}>
-        <span>🤖 Codegen Chat App</span>
+        <span>🤖 Code_AI_</span>
         <button
           className="logoutBtn"
           onClick={handleLogout}

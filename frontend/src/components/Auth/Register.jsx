@@ -1,4 +1,3 @@
-// src/components/Auth/Register.jsx
 import React, { useState } from "react";
 import "./Register.css";
 
@@ -34,40 +33,42 @@ const Register = ({ onToggle }) => {
   };
 
   return (
-    <form className="authForm" onSubmit={handleRegister}>
-      <h2 className="heading">Register</h2>
-      <input
-        className="input"
-        placeholder="Username"
-        value={username}
-        onChange={e => setUsername(e.target.value)}
-        required
-      />
-      <input
-        className="input"
-        placeholder="Email"
-        type="email"
-        value={email}
-        onChange={e => setEmail(e.target.value)}
-        required
-      />
-      <input
-        className="input"
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-        autoComplete="new-password"
-        required
-      />
-      <button className="button" type="submit">Register</button>
-      {msg && <div className="info">{msg}</div>}
-      {error && <div className="error">{error}</div>}
-      <div className="toggleText">
-        Already have an account?
-        <span className="toggleLink" onClick={onToggle}> Login </span>
-      </div>
-    </form>
+    <div className="registerPage">
+      <form className="authForm" onSubmit={handleRegister}>
+        <h2 className="heading">Code_AI_ Register</h2>
+        <input
+          className="input"
+          placeholder="Username"
+          value={username}
+          onChange={e => setUsername(e.target.value)}
+          required
+        />
+        <input
+          className="input"
+          placeholder="Email"
+          type="email"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          required
+        />
+        <input
+          className="input"
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          autoComplete="new-password"
+          required
+        />
+        <button className="button" type="submit">Register</button>
+        {msg && <div className="info">{msg}</div>}
+        {error && <div className="error">{error}</div>}
+        <div className="toggleText">
+          Already have an account?
+          <span className="toggleLink" onClick={onToggle}> Login </span>
+        </div>
+      </form>
+    </div>
   );
 };
 
