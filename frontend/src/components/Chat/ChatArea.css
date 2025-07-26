@@ -25,6 +25,18 @@
   color: #123;
   box-shadow: 0 2px 9px rgba(80,120,200,0.03);
 }
+.bubble-timestamp {
+  font-size: 0.75rem;         /* Smaller text for timestamps */
+  color: #888;                /* Muted gray for less focus */
+  margin-bottom: 4px;         /* Space between timestamp and content */
+  margin-top: 2px;
+  text-align: left;          /* Align to the bubble's right edge */
+  opacity: 0.8;
+  letter-spacing: 0.02em;
+
+}
+
+
 .bubble.user {
   background: #d2f2db;
   color: #143417;

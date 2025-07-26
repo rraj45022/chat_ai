@@ -28,6 +28,7 @@ const ChatArea = ({ sessionId, token }) => {
           credentials: "include",
         });
         const data = await res.json();
+        console.log(data)
         setMessages(data.conversation || []);
       } catch (e) {
         setMessages([]);
@@ -63,7 +64,7 @@ const ChatArea = ({ sessionId, token }) => {
       <div className="chatMessages">
         {loading && <div className="chatLoading">Waiting for assistant...</div>}
         {messages.map((msg, idx) => (
-          <MessageBubble key={idx} role={msg.role} content={msg.content} />
+          <MessageBubble key={idx} role={msg.role} content={msg.content} timestamp={msg.timestamp} />
         ))}
         <div ref={chatEndRef} />
       </div>

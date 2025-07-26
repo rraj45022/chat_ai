@@ -1,6 +1,7 @@
 import os
 from fastapi import APIRouter, Depends, HTTPException, status,  File, UploadFile
 import whisper
+import traceback
 from pydantic import BaseModel
 from typing import List, Dict
 from openai import OpenAI  # OpenAI-compatible client
@@ -13,6 +14,9 @@ from jose import JWTError, jwt
 from .models import User, ChatMessage, ChatSession
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 # Initialize FastAPI app
 router = APIRouter()
 load_dotenv(dotenv_path=Path(__file__).resolve().parent / ".env")
@@ -56,8 +60,10 @@ def get_chat_history(db: Session, session_id: str, user_id: int) -> list[dict]:
         .order_by(ChatMessage.timestamp)
         .all()
     )
-    return [{"role": m.role, "content": m.content} for m in messages]
+    return [{"role": m.role, "content": m.content, "timestamp": m.timestamp.isoformat()} for m in messages]
 
+
+import datetime
 
 def save_message(db: Session, session_id: str, user_id: int, role: str, content: str):
     # Verify session ownership before saving
@@ -97,6 +103,7 @@ client = OpenAI(
 class Message(BaseModel):
     role: str    # "user" or "assistant"
     content: str
+    timestamp: str
 
 class ChatHistoryRequest(BaseModel):
     session_id: str
@@ -158,7 +165,7 @@ def chat_history(
         .all()
     )
     # Build list of dicts
-    messages = [{"role": m.role, "content": m.content} for m in conversation]
+    messages = [{"role": m.role, "content": m.content, "timestamp": m.timestamp.isoformat()} for m in conversation]
     return {"conversation": messages}
 
 
@@ -175,15 +182,21 @@ async def chat_endpoint(req: ChatRequest,
     
     # Get chat history from DB
     conversation = get_chat_history(db, req.session_id, current_user.id)    # Add user message to DB
-    save_message(db, req.session_id, current_user.id, "user", req.message)
-    # Re-fetch with user's message
-    conversation = get_chat_history(db, req.session_id, current_user.id)
-    context_window = conversation[-10:]
-
     try:
+        try:
+            save_message(db, req.session_id, current_user.id, "user", req.message)
+        except ValueError as ve:
+            raise HTTPException(status_code=403, detail=str(ve))
+        # Re-fetch with user's message
+        conversation = get_chat_history(db, req.session_id, current_user.id)
+        context_window = conversation[-10:]
+        filtered_context = [
+            {"role": msg["role"], "content": msg["content"]}
+            for msg in context_window
+        ]
         response = client.chat.completions.create(
             model="meta-llama/llama-4-scout-17b-16e-instruct",  # Use your Grok model name here (see xAI docs for latest)
-            messages=context_window,
+            messages=filtered_context,
             temperature=0.2
         )
         assistant_reply = response.choices[0].message.content
@@ -193,4 +206,7 @@ async def chat_endpoint(req: ChatRequest,
         conversation = get_chat_history(db, req.session_id, current_user.id)
         return ChatResponse(reply=assistant_reply, conversation=conversation)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        tb_str = traceback.format_exc()
+        print("Full traceback:\n", tb_str)  # This will show the error in your terminal
+        # Optionally return the traceback in the response (NOT recommended for production)
+        raise HTTPException(status_code=500, detail=f"Internal server error:\n{tb_str}")
