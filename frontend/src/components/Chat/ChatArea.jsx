@@ -28,7 +28,6 @@ const ChatArea = ({ sessionId, token }) => {
           credentials: "include",
         });
         const data = await res.json();
-        console.log(data)
         setMessages(data.conversation || []);
       } catch (e) {
         setMessages([]);
