@@ -14,6 +14,8 @@ from jose import JWTError, jwt
 from .models import User, ChatMessage, ChatSession
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
+from .encryption import encrypt_message, decrypt_message
+
 import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -60,7 +62,14 @@ def get_chat_history(db: Session, session_id: str, user_id: int) -> list[dict]:
         .order_by(ChatMessage.timestamp)
         .all()
     )
-    return [{"role": m.role, "content": m.content, "timestamp": m.timestamp.isoformat()} for m in messages]
+    decrypted_messages = []
+    for m in messages:
+        try:
+            decrypted_content = decrypt_message(m.content)
+        except Exception:
+            decrypted_content = m.content  # fallback to original if decryption fails
+        decrypted_messages.append({"role": m.role, "content": decrypted_content, "timestamp": m.timestamp.isoformat()})
+    return decrypted_messages
 
 
 import datetime
@@ -70,7 +79,8 @@ def save_message(db: Session, session_id: str, user_id: int, role: str, content:
     session = db.query(ChatSession).filter_by(session_id=session_id, user_id=user_id).first()
     if not session:
         raise ValueError("Session not found or access denied")
-    msg = ChatMessage(session_id=session_id, role=role, content=content)
+    encrypted_content = encrypt_message(content)
+    msg = ChatMessage(session_id=session_id, role=role, content=encrypted_content)
     db.add(msg)
     db.commit()
 
@@ -166,9 +176,14 @@ def chat_history(
         .order_by(ChatMessage.timestamp)
         .all()
     )
-    # Build list of dicts
-    messages = [{"role": m.role, "content": m.content, "timestamp": m.timestamp.isoformat()} for m in conversation]
-    return {"conversation": messages}
+    decrypted_messages = []
+    for m in conversation:
+        try:
+            decrypted_content = decrypt_message(m.content)
+        except Exception:
+            decrypted_content = m.content  # fallback to original if decryption fails
+        decrypted_messages.append({"role": m.role, "content": decrypted_content, "timestamp": m.timestamp.isoformat()})
+    return {"conversation": decrypted_messages}
 
 
 @router.post("/chat", response_model=ChatResponse)
