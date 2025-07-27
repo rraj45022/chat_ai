@@ -68,3 +68,23 @@
   color: #7a8899;
   margin-top: 2px;
 }
+
+.export-pdf-btn {
+  margin-left: 8px;
+  background-color: #0c79e2;
+  color: white;
+  border: none;
+  padding: 4px 4px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  box-shadow: 0 2px 6px rgba(12, 121, 226, 0.6);
+  font-size: 1rem;
+  user-select: none;
+}
+
+.export-pdf-btn:hover {
+  background-color: #095bb5;
+  box-shadow: 0 4px 12px rgba(9, 91, 181, 0.8);
+}

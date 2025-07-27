@@ -3,7 +3,7 @@ import MessageBubble from "./MessageBubble";
 import MessageInput from "./MessageInput";
 import "./ChatArea.css";
 
-const ChatArea = ({ sessionId, token }) => {
+const ChatArea = ({ sessionId, token, chatRef, setChatMessages }) => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -13,6 +13,11 @@ const ChatArea = ({ sessionId, token }) => {
   useEffect(() => {
     if (chatEndRef.current) chatEndRef.current.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // Update parent chatMessages state for PDF export
+  useEffect(() => {
+    setChatMessages(messages);
+  }, [messages, setChatMessages]);
 
   // Fetch conversation on mount/session change
   useEffect(() => {
@@ -72,7 +77,7 @@ const ChatArea = ({ sessionId, token }) => {
         onChange={handleSearchChange}
         className="chat-search-input"
       />
-      <div className="chatMessages">
+      <div className="chatMessages" ref={chatRef}>
         {loading && <div className="chatLoading">Waiting for assistant...</div>}
         {messages.map((msg, idx) => (
           <MessageBubble

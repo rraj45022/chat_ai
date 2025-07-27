@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef} from "react";
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
 import Sidebar from "./components/Sidebar";
@@ -20,6 +20,10 @@ function App() {
 
   // Modal state for new session
   const [isNewSessionModalOpen, setIsNewSessionModalOpen] = useState(false);
+
+  // Chat messages state for PDF export
+  const [chatMessages, setChatMessages] = useState([]);
+  const chatRef = useRef(null);
 
   // Fetch sessions function
   const fetchSessions = async () => {
@@ -149,6 +153,7 @@ function App() {
         onSelectSession={setActiveSessionId}
         onNewSession={handleNewSession}
         onDeleteSession={handleDeleteSession}
+        chatMessages={chatMessages}
       />
       {isNewSessionModalOpen && (
         <NewSessionModal
@@ -161,7 +166,7 @@ function App() {
           {!activeSessionId ? (
             <h2 style={{ padding: "32px" }}>Select a chat or create a new one</h2>
           ) : (
-            <ChatArea sessionId={activeSessionId} isLoggedIn={isLoggedIn} />
+            <ChatArea sessionId={activeSessionId} isLoggedIn={isLoggedIn} chatRef={chatRef} setChatMessages={setChatMessages} />
           )}
         </main>
       </div>

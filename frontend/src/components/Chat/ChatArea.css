@@ -6,7 +6,9 @@
   border-radius: 0 8px 8px 0;
   background: #fff;
   margin: 0;
+
 }
+
 
 .chatMessages {
   flex: 1;
@@ -119,6 +121,7 @@
   box-sizing: border-box;
   transition: border 0.2s;
   background-color: #616e41;
+  color: #090909;
 }
 
 .chat-search-input:focus {
