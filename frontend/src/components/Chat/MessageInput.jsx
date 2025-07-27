@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./ChatArea.css";
 
 const MessageInput = ({ onSend, disabled, token }) => {
@@ -7,6 +7,16 @@ const MessageInput = ({ onSend, disabled, token }) => {
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const streamRef = useRef(null);
+  const textareaRef = useRef(null);
+
+  // Auto resize textarea
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = textareaRef.current.scrollHeight + "px";
+    }
+  }, [input]);
+
   // Start audio recording
   const startRecording = async () => {
     setRecording(true);
@@ -20,7 +30,7 @@ const MessageInput = ({ onSend, disabled, token }) => {
     mediaRecorderRef.current.onstop = async () => {
       setRecording(false);
       if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop());
+        streamRef.current.getTracks().forEach(track => track.stop());
       }
       const audioBlob = new Blob(audioChunksRef.current, { type: "audio/wav" });
       // Transcribe with backend
@@ -59,13 +69,15 @@ const MessageInput = ({ onSend, disabled, token }) => {
 
   return (
     <form className="messageInputForm" onSubmit={handleSubmit}>
-      <input
+      <textarea
+        ref={textareaRef}
         className="messageInput"
-        type="text"
         value={input}
         onChange={e => setInput(e.target.value)}
         placeholder="Type your prompt..."
         disabled={disabled}
+        rows={1}
+        style={{ resize: "none", overflow: "hidden" }}
         autoFocus
       />
       <button type="button" onClick={handleMicClick} disabled={disabled} style={{ marginLeft: 8 }}>
