@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
 import Sidebar from "./components/Sidebar";
 import ChatArea from "./components/Chat/ChatArea";
+import NewSessionModal from "./components/Chat/NewSessionModal";
 import "./App.css";
 
 function App() {
@@ -16,6 +17,9 @@ function App() {
   // Sessions state for sidebar
   const [sessions, setSessions] = useState([]);
   const [loadingSessions, setLoadingSessions] = useState(true);
+
+  // Modal state for new session
+  const [isNewSessionModalOpen, setIsNewSessionModalOpen] = useState(false);
 
   // Fetch sessions function
   const fetchSessions = async () => {
@@ -65,13 +69,16 @@ function App() {
       : <Login onLoginSuccess={() => setIsLoggedIn(true)} onToggle={() => setShowRegister(true)} />;
   }
 
+  // Modal state for new session
+
   // Handler for creating a new chat session
-  const handleNewSession = async () => {
-    const title = window.prompt("Enter a title for the new chat session:");
-    if (title === null) {
-      // User cancelled the prompt
-      return;
-    }
+  const handleNewSession = () => {
+    setIsNewSessionModalOpen(true);
+  };
+
+  // Handler for modal create
+  const handleCreateSession = async (title, isPersonal) => {
+    setIsNewSessionModalOpen(false);
     try {
       const res = await fetch("http://localhost:8000/create_session", {
         method: "POST",
@@ -79,7 +86,7 @@ function App() {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({ title }),
+        body: JSON.stringify({ title, is_personal: isPersonal }),
       });
       const data = await res.json();
       if (res.ok && data.session_id) {
@@ -143,6 +150,13 @@ function App() {
         onNewSession={handleNewSession}
         onDeleteSession={handleDeleteSession}
       />
+      {isNewSessionModalOpen && (
+        <NewSessionModal
+          isOpen={isNewSessionModalOpen}
+          onClose={() => setIsNewSessionModalOpen(false)}
+          onCreate={handleCreateSession}
+        />
+      )}
         <main style={{ flex: 1, padding: "0", overflowY: "auto" }}>
           {!activeSessionId ? (
             <h2 style={{ padding: "32px" }}>Select a chat or create a new one</h2>

@@ -123,6 +123,7 @@ class SessionSummary(BaseModel):
     session_id: str
     title: str = None       # Optional: add title support if your model includes it
     created_at: str
+    is_personal: bool
 
 @router.get("/user/sessions", response_model=List[SessionSummary])
 def list_user_sessions(
@@ -139,7 +140,8 @@ def list_user_sessions(
         SessionSummary(
             session_id=s.session_id,
             title=getattr(s, "title", None) or f"Chat {i+1}",
-            created_at=s.created_at.isoformat()
+            created_at=s.created_at.isoformat(),
+            is_personal=s.is_personal
         )
         for i, s in enumerate(sessions)
     ]
@@ -179,16 +181,23 @@ async def chat_endpoint(req: ChatRequest,
     ).first()
     if not chat_session:
         raise HTTPException(status_code=404, detail="Session not found")
-    
+
     # Get chat history from DB
-    conversation = get_chat_history(db, req.session_id, current_user.id)    # Add user message to DB
+    conversation = get_chat_history(db, req.session_id, current_user.id)
+
     try:
         try:
             save_message(db, req.session_id, current_user.id, "user", req.message)
         except ValueError as ve:
             raise HTTPException(status_code=403, detail=str(ve))
+
         # Re-fetch with user's message
         conversation = get_chat_history(db, req.session_id, current_user.id)
+
+        # If session is personal, just save and return conversation without AI response
+        if chat_session.is_personal:
+            return ChatResponse(reply="", conversation=conversation)
+
         context_window = conversation[-10:]
         filtered_context = [
             {"role": msg["role"], "content": msg["content"]}

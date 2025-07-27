@@ -87,8 +87,11 @@ from sqlalchemy.orm import Session
 
 from pydantic import BaseModel
 
+from pydantic import BaseModel
+
 class CreateSessionRequest(BaseModel):
     title: str = None
+    is_personal: bool = False
 
 @router.post("/create_session")
 async def create_chat_session(
@@ -99,7 +102,7 @@ async def create_chat_session(
     # Generate a new unique session ID
     session_id = str(uuid.uuid4())
     # Create new ChatSession row for this user
-    new_session = ChatSession(session_id=session_id, user_id=current_user.id, title=req.title)
+    new_session = ChatSession(session_id=session_id, user_id=current_user.id, title=req.title, is_personal=req.is_personal)
     db.add(new_session)
     db.commit()
     db.refresh(new_session)

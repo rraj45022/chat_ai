@@ -23,6 +23,15 @@ const Sidebar = ({ sessions = [], loadingSessions, activeSessionId, onSelectSess
             >
               <div className="sidebar-title">
                 {sess.title || `Chat ${sess.session_id.slice(0, 6)}`}
+                {sess.is_personal ? (
+                  <span title="Personal session" style={{ marginRight: 4 }}>
+                    👤
+                  </span>
+                ) : (
+                  <span title="Group or shared session" style={{ marginRight: 4 }}>
+                    🤖
+                  </span>
+                )}
               </div>
               <div className="sidebar-date">
                 {new Date(sess.created_at).toLocaleString()}
