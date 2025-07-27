@@ -22,8 +22,18 @@ function parseContent(content) {
   return parts;
 }
 
-const MessageBubble = ({ role, content, timestamp }) => {
+const MessageBubble = ({ role, content, timestamp, searchQuery }) => {
   const parsedContent = parseContent(content);
+
+  // Function to highlight matching text
+  const highlightText = (text, query) => {
+    if (!query) return text;
+    const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, "gi");
+    const parts = text.split(regex);
+    return parts.map((part, i) =>
+      regex.test(part) ? <mark key={i}>{part}</mark> : part
+    );
+  };
 
   return (
     <div className={`bubble ${role === "user" ? "user" : "assistant"}`}>
@@ -32,9 +42,11 @@ const MessageBubble = ({ role, content, timestamp }) => {
       <div className="bubble-content">
         {parsedContent.map((part, index) =>
           part.type === "code" ? (
-            <pre key={index} className="bubble-code">{part.content}</pre>
+            <pre key={index} className="bubble-code">
+              {highlightText(part.content, searchQuery)}
+            </pre>
           ) : (
-            <span key={index}>{part.content}</span>
+            <span key={index}>{highlightText(part.content, searchQuery)}</span>
           )
         )}
       </div>

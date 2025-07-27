@@ -5,7 +5,7 @@
   box-shadow: 0 0 10px rgba(0,0,0,0.05);
   border-radius: 0 8px 8px 0;
   background: #fff;
-  margin: 8px;
+  margin: 0;
 }
 
 .chatMessages {
@@ -58,7 +58,7 @@
   word-break: break-word;
 }
 .bubble-code {
-  background: #232c39;
+  background: #232830;
   color: #f3fbff;
   padding: 10px;
   border-radius: 6px;
@@ -101,8 +101,26 @@
   background: #bed2f2;
   cursor: default;
 }
+
 .chatLoading {
   text-align: center;
   margin-bottom: 15px;
   color: #888;
+}
+
+.chat-search-input {
+  width: 100%;
+  padding: 15px 15px;
+  font-size: 1rem;
+  border: 1px solid #0a0c0d;
+  border-radius: 6px;
+  margin: 10px 0;
+  outline: none;
+  box-sizing: border-box;
+  transition: border 0.2s;
+  background-color: #616e41;
+}
+
+.chat-search-input:focus {
+  border: 1.5px solid #07090b;
 }

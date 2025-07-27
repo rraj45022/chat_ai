@@ -6,6 +6,7 @@ import "./ChatArea.css";
 const ChatArea = ({ sessionId, token }) => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const chatEndRef = useRef(null);
 
   // Auto-scroll to latest message
@@ -58,22 +59,38 @@ const ChatArea = ({ sessionId, token }) => {
     setLoading(false);
   };
 
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
   return (
     <div className="chatArea">
+      <input
+        type="text"
+        placeholder="Search messages..."
+        value={searchQuery}
+        onChange={handleSearchChange}
+        className="chat-search-input"
+      />
       <div className="chatMessages">
         {loading && <div className="chatLoading">Waiting for assistant...</div>}
         {messages.map((msg, idx) => (
-          <MessageBubble key={idx} role={msg.role} content={msg.content} timestamp={msg.timestamp} />
+          <MessageBubble
+            key={idx}
+            role={msg.role}
+            content={msg.content}
+            timestamp={msg.timestamp}
+            searchQuery={searchQuery}
+          />
         ))}
         <div ref={chatEndRef} />
       </div>
-      {/* <MessageInput onSend={handleSend} disabled={loading} /> */}
       <MessageInput
         onSend={handleSend}
         disabled={loading}
         token={token}
         sessionId={sessionId}
-/>
+      />
     </div>
   );
 };
